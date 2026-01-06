@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<psalm
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://getpsalm.org/schema/config"
+  xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+  cacheDirectory="var/psalm"
+  findUnusedPsalmSuppress="true"
+  errorLevel="1"
+>
+  <projectFiles>
+    <directory name="src"/>
+    <ignoreFiles>
+      <directory name="vendor"/>
+    </ignoreFiles>
+  </projectFiles>
+  <issueHandlers>
+    <UnusedClass>
+      <errorLevel type="suppress">
+        <file name="src/Config.php"/>
+      </errorLevel>
+    </UnusedClass>
+  </issueHandlers>
+</psalm>

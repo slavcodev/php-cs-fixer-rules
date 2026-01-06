@@ -1,0 +1,11 @@
+# Ignore all dot-files by defaults.
+.*
+
+# Add explicitly allowed.
+!/.github
+!.editorconfig
+!.gitattributes
+!.gitignore
+!.php-cs-fixer.php
+
+/vendor

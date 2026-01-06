@@ -1,0 +1,48 @@
+name: "phpunit"
+
+env:
+  XDEBUG_MODE: "coverage"
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.4']
+
+    env:
+      EXECUTE_COVERAGE: ${{ matrix.php-version == '8.4' }}
+      CLOVER_PATH: "clover.xml"
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          ini-values: xdebug.mode=${{ env.XDEBUG_MODE }}
+
+      - uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-interaction"
+
+      - if: env.EXECUTE_COVERAGE == 'true'
+        run: composer run test-units -- --testdox --coverage-clover ${{ env.CLOVER_PATH }}
+
+      - if: env.EXECUTE_COVERAGE != 'true'
+        run: composer run test-units -- --testdox
+
+      - if: env.EXECUTE_COVERAGE == 'true' && github.event_name == 'pull_request'
+        uses: slavcodev/coverage-monitor-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          coverage_path: ${{ env.CLOVER_PATH }}
+          threshold_alert: 0
+          threshold_warning: 50
